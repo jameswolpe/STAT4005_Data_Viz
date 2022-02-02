@@ -1,0 +1,60 @@
+---
+title: "Quiz 2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(here)
+
+grad_df1 <- read_excel(here("Data/data/slu_graduates_17_21.xlsx"))
+
+## fixes error in the data
+grad_df1 <- grad_df1 %>% mutate(across(everything(),
+                           .fns = ~replace(., . ==  "STATS" , "STAT")))
+
+df_long <- grad_df1 %>% pivot_longer(3:5, names_to = "type", values_to = "discipline")
+
+df_major <- df_long %>% 
+  filter(type == "major1" | type == "major2" | type == "major3")
+```
+
+##Question 1
+```{r}
+grad_count <- df_major %>%
+  group_by(discipline) %>%
+  summarise(nstudents = n()) %>%
+
+ mutate(disc_ordered = fct_reorder(.f = discipline, .x = nstudents))
+
+filter(nstudents < 4497) 
+filter(nstudents > 108)
+```
+
+```{r}
+ggplot(data = grad_count, aes(x = nstudents,
+                               y = disc_ordered)) +
+  geom_col() +
+  labs(y = "discipline")
+```
+
+##Question 2
+```{r}
+grad_df2 <- grad_df1 %>% filter(major1 == "STAT" | major2 == "STAT" | major3 == "STAT") %>% 
+  
+pivot_longer(c(6,7,8), 
+             values_to = "discipline",
+             names_to = "type") %>%
+filter(discipline != "STAT" & !is.na(discipline))
+
+
+```
+
+
+
+
