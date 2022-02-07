@@ -26,33 +26,51 @@ df_major <- df_long %>%
 
 ##Question 1
 ```{r}
-grad_count <- df_major %>%
+grad_count <- df_major %>% filter(!is.na(discipline)) %>%
   group_by(discipline) %>%
   summarise(nstudents = n()) %>%
+ mutate(disc_ordered = fct_reorder(.f = discipline, .x = nstudents)) %>% 
+  arrange(desc(nstudents)) %>% 
+  slice(1:10)
+```
 
- mutate(disc_ordered = fct_reorder(.f = discipline, .x = nstudents))
 
-filter(nstudents < 4497) 
-filter(nstudents > 108)
+```{r, eval=FALSE}
+#jenky way
+grad_count1 <- grad_count %>% filter(nstudents < 3000) 
+grad_count2 <- grad_count1 %>% filter(nstudents > 108)
 ```
 
 ```{r}
 ggplot(data = grad_count, aes(x = nstudents,
                                y = disc_ordered)) +
-  geom_col() +
+  geom_point() +
+  #Finish making lolli
+  geom_segment(aes(x = )) +
   labs(y = "discipline")
 ```
 
 ##Question 2
 ```{r}
-grad_df2 <- grad_df1 %>% filter(major1 == "STAT" | major2 == "STAT" | major3 == "STAT") %>% 
-  
-pivot_longer(c(6,7,8), 
+df_bar <- grad_df1 %>% filter(major1 == "STAT" | major2 == "STAT" | major3 == "STAT") %>% 
+pivot_longer(c(6:8), 
              values_to = "discipline",
              names_to = "type") %>%
-filter(discipline != "STAT" & !is.na(discipline))
+filter(!is.na(discipline)) %>%
+  group_by(discipline) %>%
+  summarise(nstudents = n()) %>%
+   mutate(disc_ordered = fct_reorder(.f = discipline, .x = nstudents))
+ggplot(data = df_bar, aes( x = nstudents, y = disc_ordered, fill = discipline)) + 
+  geom_bar(stat = "identity") +
+  scale_fill_viridis_d()
+```
 
-
+#Ex
+```{r}
+df_major %>% filter(!is.na(discipline))
+## 3689 maj
+## 2729 s
+3689/2729
 ```
 
 
