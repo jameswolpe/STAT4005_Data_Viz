@@ -22,9 +22,11 @@ Principal 6: "Be open to changing our methods and conclusions in response to new
 A hypothetical scenario where this would be an issue would be if there was new data or visualizations that countered ones point and instead of taking this new information they decided to alter the data to support their original claim.
 
 ##Exercise 3a
+
 https://www.kff.org/coronavirus-covid-19/slide/new-covid-19-cases-and-deaths-among-nursing-home-residents-have-dropped-since-vaccinations-began/
 
 ##Exercise 3b
+
 https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(21)00947-8/fulltext
 
 # 8.2
@@ -35,6 +37,17 @@ I think that the first example is better because the second makes the dots appea
 
 ##Exercise 2 
 
-A possible way to humanize the victims more would possibly to code by why the lynchings were comitted, I know for example many fasly accused of rape or murder, many were admitidly just racial bias
+A possible way to humanize the victims more would possibly to code by why the lynchings were committed, I know for example many falsely accused of rape or murder, many were admittedly just racial bias.
 
+##Exercise 3
+
+My biggest takeaway is that we think of computer programs as objective but the are not exempt from the cultural biases we are all exposed to everyday.
+
+Another takeaway was a clear definition of ethical visualization practices which is defined as portraying visualized information in ways that "mitigate the potential for harm engendered within the visualization form and content" this definition while broad, is about as specific as one can get with ethics.
+
+My final takeaway is that the article states that no visualization is "ideologically neutral" and that the creator must be keen to and state the cultural or other biases that are present.
+
+##Exercise 4
+
+The chart uses emotion by making each killing feel more like an individual than a statistic. It does this by displaying each life individually slowly and then increasing in speed. It also shows how long the could have lived and tally up the total "stolen years" this better evokes emotion and the sheer volume of early deaths from gun violence.
 
