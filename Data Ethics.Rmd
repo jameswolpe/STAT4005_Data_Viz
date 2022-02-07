@@ -1,0 +1,40 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#8.1.2
+
+##Exercise 1
+
+The figure 8.1 is incredibly misleading because he y axis has been flipped, it is not ethical to show this data becase at first glance  wld appear he "Stand Your Ground" law was ve effective when in realiy the oposite was true.
+
+##Exercise 2
+
+Principal 3: "Build teams with diverse ideas, backgrounds, and strengths."
+A hypothetical scenario where this would come into play would be on a team of posibly one political afiliation or one common interest, they would be less keen to chalenge a misleading statistic as it would confirm there preexisting bias.
+
+Principal 6: "Be open to changing our methods and conclusions in response to new knowledge."
+A hypothetical scenario where this would be an issue would be if there was new data or visualizations that countered ones point and instead of taking this new information they decided to alter the data to support their original claim.
+
+##Exercise 3a
+https://www.kff.org/coronavirus-covid-19/slide/new-covid-19-cases-and-deaths-among-nursing-home-residents-have-dropped-since-vaccinations-began/
+
+##Exercise 3b
+https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(21)00947-8/fulltext
+
+# 8.2
+
+##Exercise 1
+
+I think that the first example is better because the second makes the dots appear as if the lynchngs happend in that exact location when in reality it was just reported to the own or county.
+
+##Exercise 2 
+
+A possible way to humanize the victims more would possibly to code by why the lynchings were comitted, I know for example many fasly accused of rape or murder, many were admitidly just racial bias
+
+
