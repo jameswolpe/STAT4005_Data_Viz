@@ -1,0 +1,31 @@
+---
+title: "Quiz 3 take"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+“All work presented is my own, and I have followed all rules for collaboration.”
+
+James Wolpe
+
+## Question 1
+
+While initially I thought the exclusion of the successful flights in the data set was ethical becase  was not done with "malicious intent"; when reviewing the 12 principals of the Data Values and Principles manifesto by DataPractices.org, I changed my mind. Specifically principals 1: "Use data to improve life for our users, customers, organizations, and communities", principal 4: "Prioritize the continuous collection and availability of discussions and metadata", and especially principal 9: "Consider carefully the ethical implications of choices we make when using data, and the impacts of our work on individuals and society." The challenger engineers violated #1 by flowing 1/2 of it, prioritizing the interests of their organization over that of the lives it would effect. The challenger engineers violated #4 by excluding data points that could have made all the difference and making an already small sample size smaller. Finally the engineers violated #9 by not considering "carefully" the implications of their choices and the impact it could have on the individuals they were supposed to protect. While it is easy to see all of this in hindsight, the stakes were too high to have any form of doubt and the trends shown by the small data set that dint include successful launches too inconclusive and misleading.
+
+
+## Question 2
+
+https://www.datapine.com/blog/misleading-statistics-and-data/
+
+The chart in the article above was used in congress as an argument to defund planned parenthood, at first glance it is clear that the number of abortions increased and that the number of prevention screenings decreased. However when examined closer the chart has no y-axis values and it seems as if 935,000 cancer screenings is equivalent to 327,000 abortions. This image is intentionally misleading and show evidence of great evidence of bias to construe data to prove a point.
+
+## Question 3
+
+Commits are a way of of saving your work and leaving a note on it, commits are done locally on ones computer.
+
+Pushing sends the local commit to github and stores it there.
+
+Pulling takes any changes to the file from the github repository and "pulls" it onto your local repository. 
