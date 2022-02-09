@@ -1,0 +1,22 @@
+---
+title: "Quiz 3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Question 1
+The issue is that both the github and your local repository have changes and are not up to date.First you would need to pull from github so your local repository is up to date then you could push the new file.
+
+# Question 2
+
+2 Examples of andvantages of git and GitHub we discussed in class are: 1, it is far easier to see if you have submitted a file than on sakai and thus you will give us no leway with submitting our work on Github; and 2, you will be able to make comments on our work which we can then pull and have locally on our own repository.
+
+# Question 3
+
+I think that it is hardest to exicute principal #9 "Consider carefully the ethical implications of choices we make when using data, and the impacts of our work on individuals and society" as it is the most subjective to ones perceptions of ethics. An example of this could be if you are hired by a client and must protect their privacy but find in the data something that goes against their interest, is it your ethical duty to report the new finding or to protect the clients privacy 
+
+# Question 4
+
+The authors used the example of the gun violence example made by Periscopic. The graphic uses human emotion by making you see that each line is not just a statistic but a human life, and tallies up the total number of "Stolen Years". An argument against emotion in graphics is that it can "cloud the viewer’s rational mind", the idea is that the more neutral and simple the graphic is the more objective it is and that it can be clearly stated without trying to convince a point.
