@@ -27,8 +27,18 @@ ggplot(data = world_full,
   scale_fill_viridis_b()
 ```
 
-```{r, eval=False}
-hpi_dfUSA <- hpi_df %>% rename(USA = United States of America) 
+##Exercise 2
+```{r}
+world_df <- world_df %>% mutate(region = if_else(region == "USA", "United States of America", region))
+
+world_full <- left_join(world_df, hpi_df, by = c("region" = "Country"))
+
+ggplot(data = world_full,
+            mapping = aes(x = long, y = lat,
+                          group = group)) +
+  geom_polygon(colour = "black", aes(fill = Footprint)) +
+  coord_map(projection = "mercator") +
+  scale_fill_viridis_b()
 ```
 
 ##Exercise 3
@@ -42,7 +52,7 @@ ggplot(data = world_full,
 ```
 
 ##Exercise 4
-The post says that greenland is 550% too big this is because mercator disproportionatelymakes things near the poles oo big and near the equator too small.
+The post says that greenland is 550% too big this is because mercator disproportionately makes things near the poles oo big and near the equator too small.
 
 ## Exercise 5
 ```{r}
