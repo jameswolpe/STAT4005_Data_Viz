@@ -1,0 +1,37 @@
+---
+title: "Quiz 4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+“All work presented is my own, and I have followed all rules for collaboration.”
+
+Received help from my tutor Maddox
+
+James Wolpe
+
+```{r}
+library(maps)
+library(leaflet)
+library(readr)
+library(tidyverse)
+
+capitals_df <- us.cities %>% 
+  filter(capital == 2)
+```
+
+```{r}
+newcaps <- capitals_df %>% 
+  mutate(interact = paste0(capitals_df$name, capitals_df$pop))
+
+leaflet(capitals_df) %>% 
+  addTiles() %>% 
+  addProviderTiles(providers$Wikimedia) %>% 
+  addMarkers(lng = capitals_df$long, lat = capitals_df$lat, 
+             clusterOptions = markerClusterOptions(), 
+             popup = newcaps$popup)
+```
+
