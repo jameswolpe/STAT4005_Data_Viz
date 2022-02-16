@@ -1,0 +1,31 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(here)
+alcohol_df <- read_csv(here("data/alcohol.csv"))
+```
+## Question 2
+
+```{r}
+world_df <- map_data("world")
+
+world_fullB <- left_join(world_df, alcohol_df, by = c("region" = "country"))
+
+ggplot(data = world_fullB,
+            mapping = aes(x = long, y = lat,
+                          group = group)) +
+  geom_polygon(colour = "black", aes(fill = beer_servings)) +
+  coord_map(projection = "mercator", xlim=c(-180,180)) +
+  scale_fill_viridis_b(option = "plasma")
+```
+
+## Question 1 
+A time where you would not want to use a map visualization is if you were trying to see a trend of total alcohol consumption by region of the world in which case you would want to use a scatter plot and possibly group world region by country, this way you could see the trend over time
