@@ -1,0 +1,54 @@
+---
+title: "Quiz 5"
+author: "James Wolpe"
+date: "2/23/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readr)
+```
+
+##Question 1
+The first graph is appropriate to construct because when using a bar plot it should be used to show count rather than a summary of continuous data.
+
+##Question 2
+
+```{r}
+library(here)
+hpi_df <- read_csv(here("data/hpi-tidy.csv"))
+
+hpi_mean <- hpi_df %>% 
+  group_by(Region) %>%
+  summarise(
+    meanRegion = mean(Population))
+
+
+ggplot(data = hpi_mean, aes(x = Region)) +
+  geom_bar() 
+
+ggplot(hpi_mean, aes(x = Region, y = meanRegion)) +
+  geom_point()
+```
+
+## Question 3
+```{r}
+hpi_df <- hpi_df %>%
+  mutate(meanPop = mean(Population),
+            sdPop = sd(Population),
+            nPop = n()) %>%
+  mutate(l_se = meanPop - sdPop / sqrt(nPop),
+         u_se = meanPop + sdPop / sqrt(nPop))
+
+ggplot(hpi_df, aes(x = Region, y = meanPop)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = l_se, ymax = u_se)) 
+```
+
+
+
