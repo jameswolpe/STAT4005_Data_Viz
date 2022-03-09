@@ -1,0 +1,102 @@
+---
+title: "Mini_tutorial_4_wolpe"
+author: "James Wolpe"
+date: "3/9/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+All work presented is my own. I have not communicated with or worked with anyone else on this exam.
+James Wolpe
+
+##Intro
+Shiny is a package that can make interactive graphs based on input of the user, this makes the shiny package extremely useful. The goal of this section is give a rundown of the different components of the shiny app and how to put them together to make an app.
+
+The data set I used contains weather data in canton from the last few years. The variables of interest are:
+-tempmax
+-tempmin
+-temp
+-feelslikemax
+-feelslikemin
+-feelslike
+-dew
+-humidity
+
+#The Shiny App
+
+```{r}
+library(tidyverse)
+library(lubridate)
+weather_df <- read_csv("data/canton_ny_weather_data.txt")
+
+weather_df <- weather_df %>% mutate(month = month(datetime), 
+                                    year = as.factor(year(datetime)), 
+                                    day = yday(datetime)) %>% 
+  select(month, year, day, everything())
+
+
+temp_select <- names(weather_df)[c(6:13)]
+
+years_select <- c("2020", "2021", "2022")
+```
+
+A good tip for making shiny apps is typing in "shinyapp" and selecting the snippet option, this will make sure your setup is coreect and save you a lot of typing!
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
+
+The first component of the shiny app is the ui (user interface), the ui determines what is seen by the user and what the user controls. Here you detail the inputs and any outputs you want in the final app.
+
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("yearselect", label = "Select a year", choices = years_select), 
+      radioButtons("temperature", label = "Select a statistic", choices = temp_select)
+    ), 
+    mainPanel(plotOutput("scatterplot")))
+)
+```
+We just created a drop down of the years to choose, some buttons to select the temperature variable we want to select, and that we want a plot output in the main panel.
+
+
+Now on to the server. The server is where the magic happens, this is where the function changes based on the inputs selected by the user. This is done by creating "reactive" statements that change based on the users inputs. 
+Below we can see that the year input given by the user is turned into a reactive statement. R markdownfiles get run from top to bottom, this is different from the shinyapp where reactivity is the order the app is executed. This can be a little confusing at first but essentially shiny will jump around the document updating itself based on the inputs of the user.
+
+```{r}
+server <- function(input, output, session) {
+  
+  weather_reactive <- reactive({
+    weather_df %>% filter(year == input$yearselect)
+  })
+  
+  output$scatterplot <- renderPlot(
+    ggplot(data = weather_reactive(), aes(x = day, y = .data[[input$temperature]])) + 
+      geom_point()+
+      geom_smooth()
+  )
+}
+```
+
+After running both of these you can now run the shinyapp. Remeber to continuously run the shinyapp as you are working on it as it can be hard to troubleshoot for errors.
+```{r}
+shinyApp(ui, server)
+```
+

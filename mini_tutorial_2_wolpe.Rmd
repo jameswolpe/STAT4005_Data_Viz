@@ -1,0 +1,54 @@
+---
+title: "Untitled"
+author: "James Wolpe"
+date: "3/8/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+All work presented is my own. I have not communicated with or worked with anyone else on this exam.
+James Wolpe
+
+##Introduction 
+The goal of this tutorial is to show a very useful tool for data visualization: mapping. The data I used is of my home state New Hampshire 
+
+The maps package provides great maps
+
+```{r}
+#install.packages("maps")
+library(maps)
+```
+However I want to make a map of a less common area so I will be using something called a shapefile. A few links in the course notes are useful for finding pre-made shapefiles, I selected one on New Hampshire from the census website. 
+
+To use shapefiles we will have to use a package called "sf", which stands for "simple features" (not shapefiles).
+```{r}
+##install.packages("sf")
+library(sf)
+library(tidyverse)
+```
+
+We will now read in the shapefile and use the st_transform command to make the data workable.
+```{r}
+shp <- read_sf("cb_2018_33_bg_500k/cb_2018_33_bg_500k.shp") %>%
+  st_transform(st_crs("+proj=longlat"))
+```
+
+Now we can draw a map, to do this we use the geom_sf function.
+```{r}
+library(tidyverse)
+ggplot(data = shp) + 
+  geom_sf() +
+  theme_void()
+```
+
+Our map is now drawn and we can see that each town is outlined (none compare to the beauty of Dublin and Mount Monadnock), however to make this a little more useful, lets try to fill in each county by color.
+```{r}
+ggplot(data = shp) +
+  geom_sf(aes(fill = COUNTYFP)) +
+  theme_void()
+```
+
+Success! This covers the basics of how to create a shapefile map. Of all the visualizations mapping is perhaps the most beautiful.

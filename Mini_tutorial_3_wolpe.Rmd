@@ -1,0 +1,71 @@
+---
+title: "Mini_tutorial_3_wolpe"
+author: "James Wolpe"
+date: "3/9/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+“All work presented is my own. I have not communicated with or worked with anyone else on this exam.”
+
+James Wolpe
+
+
+The goal of this section is to show how to express variability in graphics, and show how graphs that show no variability when they should can be very misleading.
+To show this we will use the nfl_salaries data set that has 100 salaries of players based on their position for each year. The variables I used in the data set are:
+- Cornerback 
+- Defensive Lineman 
+- Linebacker 
+- Offensive Lineman 
+- Quarterback 
+- Running Back  
+- Safety 
+- Special Teamer
+- Wide Receiver
+- Tight End
+
+
+
+```{r}
+library(tidyverse)
+nfl_salary <- read_csv("data/nfl_salary.csv")
+```
+
+First we will look at a plot that is BAD, it will be a bar plot of the mean salary by position. A barplot should not be used to show summary statics and should only be used to show the counts of variables.
+
+```{r}
+nfl_salary <-nfl_salary %>% pivot_longer(cols = c(2:11), names_to = "Position", values_to = "Salary")
+
+nfl_salary2 <- nfl_salary%>%
+  group_by(Position) %>% 
+  summarise(avgSalary = mean(Salary)) %>% filter(avgSalary != "NA")
+```
+
+Now that we have the mean salaries by position we make a BAD  bar plot
+```{r}
+ggplot(data = nfl_salary2, aes(x = Position, y = avgSalary)) +
+  geom_bar(stat = "identity")
+```
+
+This plot is bad becasue it shows no variability, we dont know if a position has a large outlier or a large range of salaries.
+
+Let us construct a new graph that takes care of some of these issues by representing these averages with a standard error bar.
+```{r}
+nfl_salary3 <- nfl_salary %>%
+  group_by(Position)%>%
+  summarise(avgSalary = mean(Salary),
+            sdSalary = sd(Salary),
+            nSalary = n()) %>%
+  mutate(l_se = avgSalary - sdSalary / sqrt(nSalary),
+         u_se = avgSalary + sdSalary / sqrt(nSalary))
+
+ggplot(nfl_salary3, aes(x = Position, y = avgSalary)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = l_se, ymax = u_se)) 
+```
+
+This is much better as we can now see some variability, it is now clearer that wide recievers have more varibility in their salaries (meaning some get payed much more than others) while safties have far less variability.
+

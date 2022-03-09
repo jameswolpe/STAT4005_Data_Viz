@@ -1,0 +1,100 @@
+---
+title: "Mini tutorial 1"
+author: "James Wolpe"
+date: "3/7/2022"
+output: html_document
+---
+All work presented is my own. I have not communicated with or worked with anyone else on this exam.
+- James Wolpe
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+The goals of this section are to introduce key concepts of data visualization, the data used to teach these will be the Motor Trend Car Road Tests also known as mtcars
+
+The tutorial will be split up into three parts: Grammar of Graphics; Color; and Bad Graphics 
+
+
+#Section 1: Grammar of Graphics
+There are seven grammar of graphics parameters, they are:
+
+Data: the data set
+Mappings: an aesthetic mapping
+Geom_Function: a geometrical object
+Stat: a statistical transformation
+Position: a position adjustment
+Facet_Function: subplots
+Coordinate_Function: a coordinate system
+
+
+This chunk loads in the necessary package and reads in the data, for visualization we will use use ggplot2 package in tidyverse
+```{r}
+library(tidyverse)
+mtcars <- mtcars
+```
+
+```{r}
+ggplot(data = mtcars, mapping = aes(x = hp, y = mpg)) +
+  geom_point()
+```
+This simple graphic looks at the relationship between the horsepower of a car and that cars miles per gallon. Three key grammar of graphics parameters can be seen, DATA, MAPPINGS, and GEOM_FUNCTION. data = mtcars defines what data set the graphic will use (DATA).  mapping = aes(x = hp, y = mpg) defines what and how our data gets mapped to the graphic, horsepower will be on the x and miles per gallon on the y (MAPPING). geom_point() defines the tipe of graphic we want, in this case a scatter plot(GEOM_FUNCTION).
+
+```{r}
+ggplot(data = mtcars, mapping = aes(x = hp, y = mpg)) +
+  geom_point() +
+  facet_wrap(~ carb) 
+```
+this graphic adds the FACET_FUNCTION to the graphic, by using facet_wrap(~ carb). Faceting a graph is a way of grouping your graph, in this case, facet_wrap(~ carb) splits the graphic into 6 different graphs one for each number of carburetors from 1 to 6.
+
+
+Some wrangling so that a new barchart graphic can be created.
+```{r}
+mtcars2 <- mtcars %>% group_by(gear) %>%
+  summarise(ngear = n())
+```
+
+
+```{r}
+ggplot(data = mtcars2, mapping = aes(x = gear, y = ngear, fill = gear)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  coord_flip()
+```
+This graphic, in addition to defining DATA, MAPPINGS, and GEOM_FUNCTION, defines: (STAT) with stat = "identity, this tells the graphic that the user will provide the y values. (POSITION) with position = "dodge" we are telling the graphic how we want it to be positioned, for example "dodge" puts them side by side while "stack" would stack the columns. (COORDINATE_FUNCTION) this graphic uses the coord_flip() function which flips the x and y axis.
+
+#Section 2: Color
+Color is a very powerful tool when creating visualizations, and many things can be decided unconsciously by the viewer of a graphic based on color. An example of this is the proper, or improper, use of the three types of color scales: sequential, this can show data across a spectrum like comparing lifespan across different countries; Diverging, which is used when there is a midpoint such as how "red" or "blue" a state voted; and un-ordered, which is when one color is not worth more or less than another color.
+
+
+```{r}
+ggplot(data = mtcars, mapping = aes(x = gear, fill = factor(vs)))+ 
+  geom_bar() + 
+  scale_fill_brewer()
+```
+This plot incorrectly uses a sequential color scale when the two types of engines we are comparing are different categorical variables. To fix this we change from scale_fill_brewer() to viridis. The code below shows the same graph but with an un-ordered color scale
+
+```{r}
+ggplot(data = mtcars, mapping = aes(x = gear, fill = factor(vs)))+ 
+geom_bar() +
+scale_fill_viridis_d(option = "C")
+```
+
+#Section 3: Bad Graphics
+It is the responsibility of the data scientist creating the graphic to use there statistical knowledge to ensure that they do not create a "bad" or "misleading" graphic. It is perhaps easiest to show this with an example. Lets look at the first grapic created in this section again adding a linear line of best fit and another line of code:
+
+```{r}
+ggplot(data = mtcars, mapping = aes(x = hp, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = lm)+
+    ylim(0, 1500)
+```
+When looking at this graphic it could be assumed that there is almost no relation between mpg and hp, however this is just because the graphic is zoomed out too far. This bad graphic could be misleading to someone who is not as advanced at reading graphics as we are, and it is not until we fix the graphic that we see how bad it truly is,
+
+```{r}
+ggplot(data = mtcars, mapping = aes(x = hp, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = lm)
+```
+Now with the scale changed we can see how strong the relationship truly is.
+
