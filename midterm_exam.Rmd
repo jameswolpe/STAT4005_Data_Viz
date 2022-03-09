@@ -1,0 +1,158 @@
+---
+title: "midterm exam"
+author: "James Wolpe"
+date: "3/9/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 1
+```{r}
+library(tidyverse)
+library(here)
+pokemon_df <- read_csv(here("data/pokemon_full.csv"))
+pokemon_type <- pokemon_df %>% group_by(Type) %>% summarise(type_count = n())
+
+ggplot(data = pokemon_type, aes(x = Type, y = type_count)) +
+  geom_bar(stat = "identity") +
+  labs(x = "Type",
+       y = "Count") +
+  coord_flip()
+```
+a) Of the 7 grammar of graphics parameters, Data, Mappings, Geom_Function, Stat, and Coordinate_Function are explicitly specified in the above plot.
+
+*b) We usually reorder by type to make it easier for the human eye to compare the different counts, and to quickly see which has the most, least, etc.
+
+c) Zero should be used as a baseline for bar plots and lollipop plots because both of these plots are displaying variables lengths. For scatterplots and point plots it is ok to omit 0 because many plots would become useless if they were forced to start at zero. With that being said scales can be restricted to make an argument look better and this must be avoided.
+
+
+#Question 3
+Something I learned about data ethics was in the debate over the gun violence graphic we saw, there was an interesting debate in two different readings weather or not that graphic can be considered ethical, one side said it was beautiful, that the statistics felt like real people as they shot across the screen, the other said it was unethical because it is a data scientists duty to present objective graphics ta as free from opinions as they can
+
+#Question 4
+```{r}
+library(maps)
+library(tidyverse)
+library(here)
+election_df <- read_csv(here("data/2020_county_pres.csv")) %>%
+  group_by(state_name) %>%
+  summarise(total_gop = sum(votes_gop),
+            total_dem = sum(votes_dem)) %>%
+  mutate(percent_gop = 100 * total_gop / (total_gop + total_dem)) %>%
+  mutate(state_name = str_to_lower(state_name))
+
+```
+
+
+```{r}
+state_gop <- election_df %>% mutate(state = str_to_lower(state_name))
+
+state_full_gop <- left_join(state_df, state_gop, by = c("region" = "state_name"))
+```
+
+
+```{r}
+ggplot(data = state_full_gop, aes(x = long, y = lat, group = group)) +
+  geom_polygon(colour = "black", aes(fill = percent_gop)) +
+  coord_map(projection = "albers", lat0 = 39, lat1 = 45) +
+  theme_void()+
+  scale_fill_distiller(type = "div", direction = -1)
+```
+
+
+## Question 5
+```{r}
+library(shiny)
+library(tidyverse)
+library(ggrepel)
+library(here)
+
+alcohol_df <- read_csv(here("data/alcohol.csv"))
+ggplot(alcohol_df, aes(x = beer_servings, y = wine_servings)) +
+  geom_point() +
+  geom_label_repel(data = onecountry_df, aes(label = country)) +
+  geom_point(data = onecountry_df, size = 3, shape = 1)
+
+alc_choices <- c("beer_servings", "spirit_servings", "wine_servings")
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("countryselect", label = "Choose a country for the scatterplot", choices = alcohol_df$country), 
+      selectInput("alcvariable", label = "Choose a variable for the histogram", choices = alc_choices)
+    ), 
+    mainPanel(plotOutput("scatterplot"), 
+              plotOutput("histogram"))
+  )
+)
+server <- function(input, output, session) {
+  
+  onecountry_df <- reactive({
+    alcohol_df %>% filter(country == input$countryselect)
+  })
+  
+  output$scatterplot <- renderPlot(
+    ggplot(data = alcohol_df, aes(x = beer_servings, y = wine_servings)) +
+      geom_point() +
+      geom_label_repel(data = onecountry_df(), aes(label = country)) +
+      geom_point(data = onecountry_df(), size = 3, shape = 1)
+  )
+  
+  output$histogram <- renderPlot(
+    ggplot(data = alcohol_df, aes(x = .data[[input$alcvariable]])) + geom_histogram()
+  )
+}
+shinyApp(ui, server)
+```
+
+##Question 6
+--------------
+In class
+
+## Question 7
+
+```{r}
+library(tidyverse)
+wta_df <- read_csv("data/wta_matches_2019.csv")
+wta_long <- wta_df %>% pivot_longer(c(winner_name, loser_name),
+                                    names_to = "won_or_lost",
+                                    values_to = "player") %>%
+  select(won_or_lost, player, w_ace, l_ace)
+
+wta2<- wta_long %>% group_by(player) %>% count() %>% 
+  filter(n > 20)
+
+avg_ace_df <- wta_long %>% mutate(aces = if_else(won_or_lost == "winner_name", true = w_ace, false = l_ace)) %>% select(aces, everything())
+
+
+ace_df <- avg_ace_df %>% group_by(player) %>% summarise(avg_ace = mean(aces, na.rm = TRUE))
+
+
+lollipop_df <- semi_join(ace_df, wta2, by = c("player" = "player"))
+
+lollipop_df <- lollipop_df %>% mutate(player = fct_reorder(player, avg_ace)) %>% 
+  arrange(desc(avg_ace)) %>% 
+   slice_max(n = 10, avg_ace) 
+
+ggplot(data = lollipop_df, aes(x = player, y = avg_ace)) +
+  geom_point() + 
+  geom_segment(aes(x = player, xend = player, y = 0, yend = avg_ace)) +
+  coord_flip()
+```
+
+
+##Question 8
+
+a) This plot is problimatic because lolipop charts are not good at showing summary statistics of continuious data. This chart shows no variablitiy, a player with a few high ace matches might appear to be a better server than a consitent server with a lot of observations.
+
+b)
+
+```{r}
+ggplot(data = lollipop_df, aes(x = avg_ace, y = player)) + 
+  geom_point() 
+```
+
+To complete this task I would want to make it so that all of the data points were included and the mean would be a different color, this would show some variability
