@@ -1,0 +1,114 @@
+---
+title: "05-tidyverse-review4567"
+output: html_document
+---
+## section 5.1 Bilboard
+```{r setup, include=FALSE}
+##install.packages("billboard")
+library(billboard)
+library(rvest)
+library(tidyverse)
+library(rvest)
+library(purrr)
+head(wiki_hot_100s)
+tail(wiki_hot_100s)
+max(wiki_hot_100s$year)
+```
+
+
+```{r}
+bilboard_count <- wiki_hot_100s %>% filter(year <=2009 & year >= 2000) %>% group_by(artist) %>%
+summarise(ncount = n()) %>%
+arrange(desc(ncount)) %>%
+slice(1:10) %>% 
+mutate(artist_ordered = fct_reorder(.f = artist, .x= ncount))
+```
+
+# Exercise 4
+```{r}
+ggplot(data = bilboard_count, aes(x = ncount, y = artist_ordered)) + geom_point() + geom_segment(aes(x=0, xend=ncount, y=artist_ordered, yend=artist_ordered)) 
+```
+
+# Exercise 5
+```{r}
+library(billboard)
+ggplot(data = bilboard_count, aes(x = ncount, y = artist_ordered)) + geom_point(size=5, color="blue", fill=alpha("orange", 0.4), alpha=0.6, shape=13, stroke=4) + geom_segment(aes(x=0, xend=ncount, y=artist_ordered, yend=artist_ordered), size=1, color="orange") 
+```
+
+The lollipop chart is better because it is easier to view exactly how many top 100 hits an artist had and if they had the same number as another artist. It also has a higher data to ink ratio.
+
+## Exercise 6
+```{r}
+max(wiki_hot_100s$year)
+year <- 2017
+url <- paste0("https://en.wikipedia.org/wiki/Billboard_Year-End_Hot_100_singles_of_", year)
+h <- read_html(url)
+tab <- h %>% html_nodes("table")
+df <- tab[[1]] %>% html_table() %>%
+  mutate(year = 2017)
+## convert the html code into something R can read
+h <- read_html(url)
+## grabs the tables
+tab <- h %>% html_nodes("table")
+df <- tab[[1]] %>% html_table() %>%
+  mutate(year = 2017)
+df
+```
+
+```{r}
+get_wiki_100 <- function(year) {
+  
+  ## same code as before, replacing 2017 with year.
+  url <- paste0("https://en.wikipedia.org/wiki/Billboard_Year-End_Hot_100_singles_of_", year)
+  
+  h <- read_html(url)
+  
+  tab <- h %>% html_nodes("table")
+  df <- tab[[1]] %>% html_table() %>%
+    mutate(year = year)
+  
+  ## tell our function to return the dataframe `df`
+  return(df) 
+}
+```
+
+```{r}
+library(purrr)
+year_list <- list(2017, 2018, 2019, 2020, 2021)
+year_list
+
+df_all <- map(year_list, get_wiki_100)
+df_all ## a list of data frames, one for each year
+
+df_2017_present <- bind_rows(df_all)
+
+df_2017_present <- df_2017_present %>%
+  mutate(Title = str_remove_all(Title, pattern = "\"")) %>% ## get rid of \ in title
+  rename(no = No., 
+         title = Title, 
+         artist = `Artist(s)`) ## make column names match with billboard package
+
+wiki_tibble <- as_tibble(wiki_hot_100s) %>% ## convert billboard data to tibble
+  mutate(year = as.numeric(year),
+         no = as.integer(no)) ## change variable types to match with scraped data
+
+hot100_df <- bind_rows(wiki_tibble, df_2017_present)
+```
+
+```{r}
+top10_df <- hot100_df %>% filter(year <=2019 & year >= 2010) %>%
+  group_by(artist) %>%
+  summarise(nsongs = n()) %>%
+  arrange(desc(nsongs)) %>%
+  slice(1:10) %>%
+  mutate(artist = fct_reorder(artist, nsongs))
+
+ggplot(data = top10_df, aes(x = nsongs, y = artist)) + 
+  geom_point() + 
+  geom_segment(aes(x=0, xend=nsongs, y=artist, yend=artist))
+```
+
+# Exercise 7
+
+The rvest code is use to scrape data from a webpage, in this case we used it to get data from wikipedia. Purr was used to bind different data into one data set and was used instead of a loop to iterate over multiple years.
+
