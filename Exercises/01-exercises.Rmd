@@ -1,0 +1,50 @@
+---
+title: "HW-1"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: inline
+---
+## 3.1 
+
+a) James Wolpe, Junior
+
+b) Statistics major; SSES, Film minor
+
+c) Because I am interested in the independent project the second half 
+
+d) Spring 2022 or Fall 2023
+
+e) I have taken STAT 213, not CS 140
+
+f) I have not used Git
+
+g) I have now started using R studio on my desktop.
+
+h) Dublin, New Hampshire
+
+i) I play Tennis
+
+j) Trailer Park Boys
+
+k) I dont eat red meat
+
+i) I hope to gain a lot of tools for making different types of visualizations and a more organized r studio set up.
+
+
+## 3.2
+
+1. Humans naturally make infrences based on relationships we see. In the 
+Anscombe’s quartet example it is visualy clear that these 3 scatter plots show someting entirely different but a look at the summary data would show otherwise.
+
+2. This chart is in "bad taste" because it has a lot of needles information on it: The continents are labeled on the key and the chart itself, the title is poor and confusing, the continents are ordered by alphabetical rather than least to most life expectancy.
+
+
+3. One should avoid "content-free decoration" if charts lke the bar plot above were more simple and cleaned up (used less ink) they would be easier to read and make inferences from.
+
+4. The authors mean that you cant make these relative baselines on a plot like a stacked bar chart. In the example of 1.11 it is very hard to compare the green b values as they all begin at a different point.
+
+5. My main key take away is that more is not better and is often worse in data visualization, I am sure this if a problem I will run into as I am able to do more with data visualization. Another key takeaway is the use if color or lack there of, there is a husge amount of power in the humans eye to discern shades of black and white.
+
+6. No real questions I just hope we continue to talk about some of these examples as the chapter was meaty.
