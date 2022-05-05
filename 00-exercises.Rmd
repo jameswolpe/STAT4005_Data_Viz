@@ -1,0 +1,53 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#8.1.2
+
+##Exercise 1
+
+The figure 8.1 is incredibly misleading because he y axis has been flipped, it is not ethical to show this data becase at first glance  wld appear he "Stand Your Ground" law was ve effective when in realiy the oposite was true.
+
+##Exercise 2
+
+Principal 3: "Build teams with diverse ideas, backgrounds, and strengths."
+A hypothetical scenario where this would come into play would be on a team of posibly one political afiliation or one common interest, they would be less keen to chalenge a misleading statistic as it would confirm there preexisting bias.
+
+Principal 6: "Be open to changing our methods and conclusions in response to new knowledge."
+A hypothetical scenario where this would be an issue would be if there was new data or visualizations that countered ones point and instead of taking this new information they decided to alter the data to support their original claim.
+
+##Exercise 3a
+
+https://www.kff.org/coronavirus-covid-19/slide/new-covid-19-cases-and-deaths-among-nursing-home-residents-have-dropped-since-vaccinations-began/
+
+##Exercise 3b
+
+https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(21)00947-8/fulltext
+
+# 8.2
+
+##Exercise 1
+
+I think that the first example is better because the second makes the dots appear as if the lynchngs happend in that exact location when in reality it was just reported to the own or county.
+
+##Exercise 2 
+
+A possible way to humanize the victims more would possibly to code by why the lynchings were committed, I know for example many falsely accused of rape or murder, many were admittedly just racial bias.
+
+##Exercise 3
+
+My biggest takeaway is that we think of computer programs as objective but the are not exempt from the cultural biases we are all exposed to everyday.
+
+Another takeaway was a clear definition of ethical visualization practices which is defined as portraying visualized information in ways that "mitigate the potential for harm engendered within the visualization form and content" this definition while broad, is about as specific as one can get with ethics.
+
+My final takeaway is that the article states that no visualization is "ideologically neutral" and that the creator must be keen to and state the cultural or other biases that are present.
+
+##Exercise 4
+
+The chart uses emotion by making each killing feel more like an individual than a statistic. It does this by displaying each life individually slowly and then increasing in speed. It also shows how long the could have lived and tally up the total "stolen years" this better evokes emotion and the sheer volume of early deaths from gun violence.
+
