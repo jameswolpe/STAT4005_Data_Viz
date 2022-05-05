@@ -1,0 +1,17 @@
+---
+title: "HW-5"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Exercise 1 
+The first app allows the user to modify 4 variables of a random data generator: the number of data points in the sample, the intercept of the best fit line, the slope of the best fit line, and the standard deviation of residuals. 
+
+#Exercise 2
+The outputs of the app are both graphs of the best fit line and variation in the model, as well as tables of summary statistics for both.
+
+#Exercise 3
+I selected an app that visualizes covid-19 data on a map. Thee are many things the user can change, to view specific regions and statistics of interest. The app allows you to view how many covid cases there were at a given time (both new and cumulative), as well as play an animation from that selected date to see where and how case numbers changed. One interresting thing I found was comparing covid-19 to other virus outbreaks such as H1N1, Ebola and SARS.
