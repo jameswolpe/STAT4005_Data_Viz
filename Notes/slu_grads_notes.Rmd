@@ -1,0 +1,38 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readxl)
+grad_df <- read_excel("data/slu_graduates_17_21.xlsx")
+
+## fixes error in the data
+grad_df <- grad_df %>% mutate(across(everything(),
+                           .fns = ~replace(., . ==  "STATS" , "STAT")))
+```
+
+```{r}
+df_2 <- grad_df %>% pivot_longer(cols = c(3:5), names_to = "type", values_to = "discipline") %>%
+  filter(!is.na(discipline)) %>%
+  group_by(sex, discipline) %>%
+  summarise(nstudents = n()) %>%
+  pivot_wider(names_from = sex, values_from = nstudents) %>%
+  mutate(totalstudents = M+F) %>%
+  filter(totalstudents > 50) %>%
+  mutate(prop_female = F/totalstudents)
+```
+
+```{r}
+df_2 <- df_2 %>% mutate(discipline_ordered = fct_reorder(.f = discipline, .x = prop_female))
+
+ggplot(data = df_2, aes(x = prop_female, y = discipline_ordered)) + 
+  geom_point() + 
+  geom_segment(aes(x = 0, xend = prop_female, y = discipline_ordered, yend = discipline_ordered))
+```
+

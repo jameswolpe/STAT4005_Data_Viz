@@ -1,11 +1,16 @@
+## advantages of static ove interactive
+## easier to present or to send to someone
+## more user-friendly
+#install.packages("glue")
+#library(glue)
+#x <- c(4, 6, 7)
+#meanx <- mean(x)
+#glue("The mean of x is ", meanx)
+
+#tes
 
 
-# 1) An exaple of a stuation whee  would want to use a sac gaph would
-# be if I was pesenting to the slu administration about the data
-# as they dont have much statistical knoledge/ am trying to show a specific
-# example
-
-library(shiny); library(tidyverse)
+library(tidyverse)
 atp_df <- read_csv("data/atp_matches_2019.csv")
 wta_df <- read_csv("data/wta_matches_2019.csv")
 both_df <- bind_rows(atp_df, wta_df)
@@ -28,20 +33,22 @@ major_tennis <- major_tennis %>% mutate(w_svperc = 100 * w_1stIn / w_svpt,
 major_tennis_w <- major_tennis %>% filter(name == "winner_name")
 major_tennis_l <- major_tennis %>% filter(name == "loser_name")
 
-w_small <- major_tennis_w %>% select(value, winner_seed, w_ace, w_df, w_svperc,
+w_small <- major_tennis_w %>% select(tourney_name, surface, value, winner_seed, w_ace, w_df, w_svperc,
                                      w_firstwon, w_secondwon) %>%
   rename(seed = winner_seed, ace = w_ace, df = w_df, svperc = w_svperc,
-         firstwon = w_firstwon, secondwon = w_secondwon)
+         firstwon = w_firstwon, secondwon = w_secondwon) %>%
+  mutate(result = "win")
 
-l_small <- major_tennis_l %>% select(value, loser_seed, l_ace, l_df, l_svperc, l_firstwon, l_secondwon)  %>%
+l_small <- major_tennis_l %>% select(tourney_name, surface, value, loser_seed, l_ace, l_df, l_svperc, l_firstwon, l_secondwon)  %>%
   rename(seed = loser_seed, ace = l_ace, df = l_df, svperc = l_svperc,
-         firstwon = l_firstwon, secondwon = l_secondwon)
+         firstwon = l_firstwon, secondwon = l_secondwon) %>%
+  mutate(result = "loss")
 
 df <- bind_rows(w_small, l_small) %>%
   rename(player = "value")
 df
 
-var_choices <- names(df)[3:7]
+var_choices <- names(df)[c(1, 2, 4:9)]
 
 library(shiny)
 
@@ -50,42 +57,48 @@ ui <- fluidPage(
     selectizeInput("playerchoice",
                    label = "Choose a Player", choices = levels(factor(df$player)),
                    selected = "Aryna Sabalenka"),
-    selectizeInput("player2choice",
-                   label = "Choose a Second Player", choices = levels(factor(df$player)),
-                   selected = "Aryna Sabalenka"),
     radioButtons("varchoice", label = "Choose a Statistic",
-                 choices = var_choices)),
-    mainPanel(plotOutput("histgraph"), 
-              plotOutput(outputId = "boxplot"))
+                 choices = var_choices),
+    sliderInput("binnumber", label = "Choose a Number of Bins", 
+                min = 1, max = 50, value = 15, step = 1)),
+    mainPanel(plotOutput("histgraph"),
+              tableOutput("wintab"))
   )
 )
 
 server <- function(input, output, session) {
   
   df_sub <- reactive({
-    df %>% filter(player == input$playerchoice,
-                  player2 == input$playe2choice)
+    df %>% filter(player == input$playerchoice)
   })
-  
   
   hist_plot <- reactive({
     # ggplot(df_sub(), aes_string(x = input$varchoice)) +
     # geom_histogram(colour = "black", fill = "white", bins = 15)
-    ggplot(df_sub(), aes(x = .data[[input$varchoice]])) +
-      geom_histogram(colour = "black", fill = "white", bins = 15)
+    base_plot <- ggplot(df_sub(), aes(x = .data[[input$varchoice]]))
+    
+    
+    if (is.numeric(df_sub()[[input$varchoice]]) == TRUE) {
+      
+      base_plot + geom_histogram(colour = "black", fill = "white",
+                                 bins = input$binnumber) +
+        theme_minimal(base_size = 22)
+    } else if (is.character(df_sub()[[input$varchoice]])) {
+      base_plot + geom_bar(colour = "black", fill = "white") +
+        theme_minimal(base_size = 22) +
+        coord_flip()
+    }
   })
-  box_plot <- reactive({
-    # ggplot(df_sub(), aes_string(x = input$varchoice)) +
-    # geom_histogram(colour = "black", fill = "white", bins = 15)
-    ggplot(df_sub(), aes(x = .data[[input$varchoice]])) +
-      geom_boxplot(colour = "black", fill = "white", bins = 15)
-  })
+  
+  
   output$histgraph <- renderPlot({
     hist_plot()
   })
-  output$boxplot <- renderPlot(
-    box_plot()
-  )
+  
+  output$wintab <- renderTable({
+    table(df_sub()$result)
+  })
+  
 }
 
 shinyApp(ui, server)

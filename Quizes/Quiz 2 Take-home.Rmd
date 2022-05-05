@@ -1,0 +1,102 @@
+---
+title: "Quiz 2 Take Home"
+output: html_document
+---
+Statement of Integrity: Copy and paste the following statement and then sign your name (by typing it) on the line below.
+
+“All work presented is my own, and I have followed all rules for collaboration.”
+
+James Wolpe
+
+Collaboration Reminder: You may work with other students who are in our class on the take-home quiz, but you must list who you worked with at the top of your quiz. Write the name of any student(s) that you collaborated with in the space below this (ignore this if you did not collaborate with any students).
+
+Maddox Ormiston
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(readxl)
+grad_df <- read_excel("Data/data/slu_graduates_17_21.xlsx")
+
+## fixes error in the data
+grad_df <- grad_df %>% mutate(across(everything(),
+                           .fns = ~replace(., . ==  "STATS" , "STAT")))
+```
+
+## Question 1
+```{r}
+grad_df1 <- grad_df %>% filter(major1 == "STAT" | major2 == "STAT" | major3 == "STAT") %>% 
+  
+pivot_longer(c(3,4,5), 
+             values_to = "discipline",
+             names_to = "type") %>%
+filter(discipline != "STAT" & !is.na(discipline))
+
+grad_count <- grad_df1 %>%
+  group_by(discipline) %>%
+  summarise(nstudents = n()) %>% 
+## changing discipline so that it is ordered from most to least nstudents when graphed
+  mutate(disc_ordered = fct_reorder(.f = discipline, .x = nstudents))
+
+
+```
+
+
+
+```{r}
+ggplot(data = grad_count, aes(x = nstudents,
+                               y = disc_ordered)) +
+  geom_col() +
+  labs(y = "discipline")
+```
+
+
+## Question 2
+```{r}
+library(tidyverse)
+library(readxl)
+grad_df <- read_excel("data/slu_graduates_17_21.xlsx")
+
+## fixes error in the data
+grad_df <- grad_df %>% mutate(across(everything(),
+                           .fns = ~replace(., . ==  "STATS" , "STAT")))
+```
+
+```{r}
+df_2 <- grad_df %>% pivot_longer(cols = c(3:5), names_to = "type", values_to = "discipline") %>%
+  filter(!is.na(discipline)) %>%
+  group_by(sex, discipline) %>%
+  summarise(nstudents = n()) %>%
+  pivot_wider(names_from = sex, values_from = nstudents) %>%
+  mutate(totalstudents = M+F) %>%
+  filter(totalstudents > 50) %>%
+  mutate(prop_female = F/totalstudents)
+```
+
+```{r}
+df_2 <- df_2 %>% mutate(discipline_ordered = fct_reorder(.f = discipline, .x = prop_female))
+
+ggplot(data = df_2, aes(x = prop_female, y = discipline_ordered)) + 
+  geom_point() + 
+  geom_segment(aes(x = 0, xend = prop_female, y = discipline_ordered, yend = discipline_ordered)) +
+  labs(x = "Proportion of Female Majors in Past 5 Years",
+       y = "discipline")
+```
+
+```{r}
+df_2 <- df_2 %>% mutate(discipline_ordered = fct_reorder(.f = discipline, .x = prop_female))
+
+df_colored <- df_2 %>% 
+  mutate(higher = if_else(prop_female > 0.5, 
+                                      true = "Female",
+                                      false = "Male")
+ggplot(data = df_colored, aes(x = discipline, y = prop_female, colour = higher)) + 
+  geom_point() + 
+  geom_segment(aes(x = .5, xend = prop_female, y = discipline_ordered, yend = discipline_ordered)) +
+  labs(x = "Proportion of Female Majors in Past 5 Years",
+       y = "discipline")
+```
+
+

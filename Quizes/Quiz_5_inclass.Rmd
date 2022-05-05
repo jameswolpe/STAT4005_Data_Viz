@@ -29,8 +29,8 @@ hpi_mean <- hpi_df %>%
     meanRegion = mean(Population))
 
 
-ggplot(data = hpi_mean, aes(x = Region)) +
-  geom_bar() 
+ggplot(data = hpi_mean, aes(x = Region, y = meanRegion)) +
+  geom_col()
 
 ggplot(hpi_mean, aes(x = Region, y = meanRegion)) +
   geom_point()
@@ -39,7 +39,8 @@ ggplot(hpi_mean, aes(x = Region, y = meanRegion)) +
 ## Question 3
 ```{r}
 hpi_df <- hpi_df %>%
-  mutate(meanPop = mean(Population),
+  group_by(Region)%>%
+  summarise(meanPop = mean(Population),
             sdPop = sd(Population),
             nPop = n()) %>%
   mutate(l_se = meanPop - sdPop / sqrt(nPop),

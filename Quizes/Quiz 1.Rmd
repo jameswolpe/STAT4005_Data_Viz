@@ -1,0 +1,49 @@
+---
+title: "Quiz 1 in class"
+output: html_document
+---
+
+
+
+1. the easiest catgory to view the overall trend would be group 5 as it has a baseline of zero so they can all be evaluated on the same scale.
+
+2.
+```{r}
+library(tidyverse)
+category <- rep(c("Group 1", "Group 2", "Group 3", "Group 4", "Group 5"), 7)
+time <- rep(c(2000, 2001, 2002, 2003, 2004, 2005, 2006), each = 5) 
+response <- rpois(length(category), 30)
+df <- tibble(category, time, response)
+ggplot(data = df, aes(x = time, y = response)) +
+  geom_col(aes(fill = category)) +
+  facet_wrap(~ response) +
+  labs(y = "count")
+```
+
+3a. We would use diverging scale as it would have a clear neutral baseline showing no change and would be easy to see positive or negitive change based on the intesity of the two hues.
+
+3b. We would use sequential as the gradient can represnt high or low covid cases clearly, ie high covid cases might be bright red while medium would be a lighter grey-red.
+
+```{r}
+ggplot(data = df, aes(x = time, y = response)) +
+  geom_col(aes(fill = category)) +
+  coord_flip()
+```
+
+4. The following plot modifies mapping using the aes function to modify fill and coordinate function coord_flip to stack the bar horizontally.
+
+5a.i
+
+```{r}
+ggplot(data = df, aes(x = time, y = response)) +
+  geom_point(colour = "blue")
+```
+You would need to just put color = blue in the geom function so it effects the entire plot.
+
+5b
+
+```{r}
+ggplot(data = df, aes(x = time, y = response, colour = category)) +
+  geom_point() +
+  geom_smooth(se = FALSE, span = 1.9)
+```

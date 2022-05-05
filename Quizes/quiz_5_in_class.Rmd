@@ -1,0 +1,57 @@
+---
+title: "Quiz 5"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+statsurvey_df <- read_csv("data/stat113_survey.csv")
+statsurvey_df %>%
+filter(!is.na(Facebook)) %>%
+  separate(time_both, into = c("semester", "year"),
+                               sep = 1) %>%
+  arrange(year, desc(semester)) %>%
+  unite(col = "time_both", c(semester, year)) %>%
+  mutate(time_both = fct_inorder(time_both))
+
+stat_facebook <- statsurvey_df %>% filter(!is.na(Facebook)) %>%
+  mutate(time_both = fct_inorder(time_both)) %>%
+  group_by(time_both) %>%
+  summarise(meanFacebook = mean(Facebook),
+            sdFacebook = sd(Facebook),
+            nFacebook = n()) %>%
+  mutate(l_se = meanFacebook - sdFacebook / sqrt(nFacebook),
+         u_se = meanFacebook + sdFacebook / sqrt(nFacebook))
+ggplot(stat_facebook, aes(x = time_both, y = meanFacebook)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = l_se, ymax = u_se))
+  
+```
+
+```{r}
+stat_facebook2 <- statsurvey_df %>% 
+  mutate(Facebook = replace(Facebook, Facebook == 0, NA)) %>% 
+  mutate(nFacebook = if_else(is.na(Facebook), true = "No", false = "Yes"))
+
+stat_facebook3 <- stat_facebook2  %>%
+  group_by(time_both, nFacebook) %>%
+  summarise(ncount = n()) %>%
+  ungroup() %>%
+  group_by(time_both) %>%
+  mutate(ntotal = sum(ncount)) %>%
+  ungroup() %>%
+  filter(nFacebook == "Yes") %>%
+  mutate(prop = ncount / ntotal) %>%
+separate(time_both, into = c("semester", "year"),
+                               sep = 1) %>%
+  arrange(year, desc(semester)) %>%
+  unite(col = "time_both", c(semester, year)) %>%
+  mutate(time_both = fct_inorder(time_both))
+
+ggplot(stat_facebook3, aes(x = time_both, y = prop)) +
+  geom_point()
+```
+

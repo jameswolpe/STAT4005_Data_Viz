@@ -1,12 +1,13 @@
-## advantages of static over interactive
-## easier to present or to send to someone
-## more user-friendly
-## useful when trying to show one particular "thing": like other majors of stat majors or looking at one particular player of interest.
 
-library(tidyverse)
+
+# 1) An exaple of a stuation whee  would want to use a sac gaph would
+# be if I was pesenting to the slu administration about the data
+# as they dont have much statistical knoledge/ am trying to show a specific
+# example
+
+library(shiny); library(tidyverse)
 atp_df <- read_csv("data/atp_matches_2019.csv")
 wta_df <- read_csv("data/wta_matches_2019.csv")
-
 both_df <- bind_rows(atp_df, wta_df)
 
 both_long <- both_df %>% pivot_longer(c(winner_name, loser_name))
@@ -40,43 +41,54 @@ df <- bind_rows(w_small, l_small) %>%
   rename(player = "value")
 df
 
-## step 1
-df_oneplayer <- df %>% filter(player == "Daniil Medvedev")
-ggplot(data = df_oneplayer, aes(x = ace)) +
-  geom_histogram(colour = "black", fill = "white", bins = 15)
+var_choices <- names(df)[3:7]
 
 library(shiny)
 
 ui <- fluidPage(
-  sidebarLayout(
-    sidebarPanel(selectizeInput(inputId = "playerselect",
-                                label = "Choose a Player",
-                                choices = levels(factor(df$player))),
-                 radioButtons(inputId = "varselect",
-                              label = "Choose a Variable",
-                              choices = names(df)[c(3, 4, 5, 6, 7)]),
-                 sliderInput("binnumber", label = "Choose a Number of Bins", 
-                             min = 1,
-                             max = 20, 
-                             value = 1, 
-                             step = 2, 
-                             animate = animationOptions(interval = 1000))),
-    mainPanel(plotOutput("histplot"))
-  
+  sidebarLayout(sidebarPanel(
+    selectizeInput("playerchoice",
+                   label = "Choose a Player", choices = levels(factor(df$player)),
+                   selected = "Aryna Sabalenka"),
+    selectizeInput("player2choice",
+                   label = "Choose a Second Player", choices = levels(factor(df$player)),
+                   selected = "Aryna Sabalenka"),
+    radioButtons("varchoice", label = "Choose a Statistic",
+                 choices = var_choices)),
+    mainPanel(plotOutput("histgraph"), 
+              plotOutput(outputId = "boxplot"))
+  )
 )
-)
+
 server <- function(input, output, session) {
   
-  df_oneplayer <- reactive({
-    df %>% filter(player == input$playerselect)
+  df_sub <- reactive({
+    df %>% filter(player == input$playerchoice)
+  })
+  
+  df2_sub <- reactive({
+  df %>% filter(player == input$playerchoice | player == input$player2choice)
   })
   
   
-  output$histplot <- renderPlot({
-    ggplot(data = df_oneplayer(), aes(x = .data[[input$varselect]])) +
-      geom_histogram(colour = "black", fill = "white", bins = input$binnumber)
+  hist_plot <- reactive({
+    # ggplot(df_sub(), aes_string(x = input$varchoice)) +
+    # geom_histogram(colour = "black", fill = "white", bins = 15)
+    ggplot(df_sub(), aes(x = .data[[input$varchoice]])) +
+      geom_histogram(colour = "black", fill = "white", bins = 15)
   })
+  box_plot <- reactive({
+    # ggplot(df_sub(), aes_string(x = input$varchoice)) +
+    # geom_histogram(colour = "black", fill = "white", bins = 15)
+    ggplot(df2_sub(), aes(x = player, y = .data[[input$varchoice]])) +
+      geom_boxplot(colour = "black", fill = "white", bins = 15)
+  })
+  output$histgraph <- renderPlot({
+    hist_plot()
+  })
+  output$boxplot <- renderPlot(
+    box_plot()
+  )
 }
 
 shinyApp(ui, server)
-

@@ -1,0 +1,26 @@
+---
+title: "Quiz-1 Take Home"
+output: html_document
+---
+
+## Quiz 1
+
+1. A colors hue is the colors we see on a color wheel such as: red, blue, purple, etc. A color's intensity or chrominance is the brightness or vividness of that color.
+
+
+2. An example where one would want to use a sequential color scale would be on something like deaths per day on a calendar, this would make it easy to see which days had a lot of deaths and which days had fewer on a gradient scale. When looking at voting results in a US state it is useful to use the diverging color scale as it is easy to see how red, blue, or neutral that state voted. Unordererd color scale would be used for something like counting birds migrating on a given day, where each color would represent a different species of bird counted that day.
+
+
+3. The top right is a great example of color trumping proximity and similarity. Even though there is one 3x3 grouping of circles and two 2x3 groupings it is clear by the stripe of color across the middle that the middle rows are what the observation should be made on.
+
+
+4. It can be seen in both leveland and McGill’s original results and and Heer and Bostock’s that bar charts are the best for visualizing a single categorical variable as they had the lowest log error in the study, meaning the subjects were the most correct at estimating amounts on a bar chart. Heer and Bostock’s replication shows that Pie charts are near the worst.
+
+5. I would use different colors to distinguish the countries as we can see in figure 1.25 color hue is effective while shape is the least effective. 
+
+
+6. The left side of figure 1.27 might be used the show that in 2011 Law School enrollment numbers dropped sharply to levels we haven't seen sinc the 1970's, the figure on the right might be used to observe overall trends in law school enrolment, posibly to be used to compare to other grad school programs.
+
+7. My main takeaway is how simplicity is key, for example it is easy for humans to estimate the length of a line but becomes harder as one adds more dimensions, such as estimating area and our estimation is even worse on the z-axis. I also found the studies that ranked channels for mapping unordered categorical data and chart types helpful as they were clear visual representations of the hierarchy and certain things about visual perception can be inferred.
+
+8. A question I have from the reading is when one would correctly use 3d graphs or shapes for representations. Ideas I have are shapes would be used when there are many variables and Volume might be used for spatial data.

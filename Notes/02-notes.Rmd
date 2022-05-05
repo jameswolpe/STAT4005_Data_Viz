@@ -1,0 +1,24 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+library(tidyverse)
+category <- rep(c("Group 1", "Group 2", "Group 3", "Group 4", "Group 5"), 7)
+time <- rep(c(2000, 2001, 2002, 2003, 2004, 2005, 2006), each = 5) 
+response <- rpois(length(category), 30)
+df <- tibble(category, time, response)
+ggplot(data = df, aes(x = time, y = response)) +
+  geom_col(aes(fill = category)) +
+  labs(y = "count") +
+  scale_fill_viridis_d()
+
+```
+
+```{r}
+ggplot(data=df, aes(x=time, y=response)) + geom_line(aes(colour = category)) + 
+scale_colour_viridis_d()
+```

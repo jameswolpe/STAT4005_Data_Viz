@@ -1,0 +1,109 @@
+---
+title: "Introduction to 'shiny'"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("shiny")
+library(shiny)
+```
+
+
+```{r}
+plot_df <- tibble(samp_props = seq(from = 0, to =1, by = 0.001), 
+       se = sqrt(samp_props) * (1 - samp_props))
+ggplot(data = plot_df)
+```
+
+```{r}
+library(shiny)
+ui <- fluidPage(
+  selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
+  verbatimTextOutput("summary"),
+  tableOutput("table")
+)
+server <- function(input, output, session) {
+  output$summary <- renderPrint({
+    dataset <- get(input$dataset, "package:datasets")
+    summary(dataset)
+  })
+  
+  output$table <- renderTable({
+    dataset <- get(input$dataset, "package:datasets")
+    dataset
+  })
+}
+```
+
+# exercise 1 
+```{r}
+library(shiny)
+ui <- fluidPage(
+  textInput("name", "What's your name?"),
+  textOutput("greeting")
+)
+
+server <- function(input, output, session) { output$greeting <- renderText({
+  paste0("Hello ", input$name)
+}) 
+}
+shinyApp(ui, server)
+```
+
+#Exercise 2
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("x", label = "If x is", min = 1, max = 50, value = 30),
+  sliderInput("y", label = "and y is", min = 1, max = 50, value = 30),
+  "then x times y is",
+  textOutput("product")
+)
+
+server <- function(input, output, session) {
+  output$product <- renderText({ 
+    input$x * input$y
+  })
+}
+
+shinyApp(ui, server)
+```
+
+exercise 4
+```{r}
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("x", "If x is", min = 1, max = 50, value = 30),
+  sliderInput("y", "and y is", min = 1, max = 50, value = 5),
+  "then, (x * y) is", textOutput("product"),
+  "and, (x * y) + 5 is", textOutput("product_plus5"),
+  "and (x * y) + 10 is", textOutput("product_plus10")
+)
+
+server <- function(input, output, session) {
+  product <- reactive({input$x * input$y})
+  
+  output$product <- renderText({ 
+    product()
+  })
+  output$product_plus5 <- renderText({ 
+    product() + 5
+  })
+  output$product_plus10 <- renderText({ 
+    product() + 10
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
+
+
+
