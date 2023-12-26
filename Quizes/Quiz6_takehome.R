@@ -3,7 +3,8 @@
 
 library(tidyverse)
 library(shiny)
-hpi_df <- read_csv("data/hpi-tidy.csv")
+library(here)
+hpi_df <- read_csv(here("data/hpi-tidy.csv"))
 
 
 ui <- fluidPage(

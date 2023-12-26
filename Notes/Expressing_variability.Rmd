@@ -168,6 +168,40 @@ statsurvey_df %>% filter(!is.na(Tattoo)) %>%
 
 
 
+```{r}
+statsurvey_tattoo <- statsurvey_df %>% filter(!is.na(Tattoo)) %>%
+  group_by(time_both, Tattoo) %>%
+  summarise(ncount = n()) %>%
+  ungroup() %>%
+  group_by(time_both) %>%
+  mutate(ntotal = sum(ncount)) %>%
+  ungroup() %>%
+  filter(Tattoo == "Yes") %>%
+  mutate(prop = ncount / ntotal,
+         se = sqrt(prop * (1 - prop) / ntotal),
+         l_se = prop - se,
+         u_se = prop + se)
+statsurvey_tattoo <- statsurvey_tattoo %>%
+  separate(time_both, into = c("semester", "year"),
+                               sep = 1) %>%
+  arrange(year, desc(semester)) %>%
+  unite(col = "time_both", c(semester, year)) %>%
+  mutate(time_both = fct_inorder(time_both))
+ggplot(data = statsurvey_tattoo, aes(x = time_both, y = prop)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = l_se, ymax = u_se))
+stat_gpa <- statsurvey_df %>% filter(!is.na(GPA)) %>%
+  mutate(time_both = fct_inorder(time_both)) %>%
+  group_by(time_both) %>%
+  summarise(meangpa = mean(GPA),
+            sdgpa = sd(GPA),
+            ngpa = n()) %>%
+  mutate(l_se = meangpa - sdgpa / sqrt(ngpa),
+         u_se = meangpa + sdgpa / sqrt(ngpa))
+ggplot(stat_gpa, aes(x = time_both, y = meangpa)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = l_se, ymax = u_se))
+```
 
 
 
